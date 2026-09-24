@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Manwar Meraj — Senior .NET Developer">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0e1117"/>
+      <stop offset="1" stop-color="#161d2b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b7bff"/>
+      <stop offset="1" stop-color="#58c7f3"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1050" cy="90" r="320" fill="url(#accent)" opacity="0.14"/>
+  <rect x="80" y="118" width="88" height="88" rx="20" fill="url(#accent)"/>
+  <text x="124" y="176" text-anchor="middle" font-family="'Segoe UI',system-ui,sans-serif" font-size="42" font-weight="800" fill="#0e1117">MM</text>
+  <text x="82" y="330" font-family="'Segoe UI',system-ui,sans-serif" font-size="82" font-weight="800" fill="#eef2f7" letter-spacing="-2">Manwar Meraj</text>
+  <text x="86" y="392" font-family="'Segoe UI',system-ui,sans-serif" font-size="34" font-weight="600" fill="#8b7bff">Senior .NET Developer · Backend &amp; API Engineering · Team Lead</text>
+  <text x="86" y="452" font-family="'Segoe UI',system-ui,sans-serif" font-size="26" fill="#9aa7b8">6+ yrs · C# · ASP.NET Core · EF Core · SQL Server · AI-assisted development</text>
+  <text x="86" y="536" font-family="'Segoe UI',system-ui,sans-serif" font-size="24" fill="#6d7a8c">Bhubaneswar, Odisha, India</text>
+</svg>
