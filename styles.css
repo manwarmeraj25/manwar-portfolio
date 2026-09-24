@@ -709,6 +709,86 @@ strong { color: var(--text); font-weight: 600; }
   .caret2 { animation: none; }
 }
 
+/* ============================================================
+   HIGH-END EFFECTS LAYER
+   ============================================================ */
+
+/* ---- Film-grain texture ---- */
+.grain {
+  position: fixed; inset: 0; z-index: 350; pointer-events: none; opacity: .05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  animation: grain-shift 6s steps(5) infinite;
+}
+[data-theme="light"] .grain { opacity: .035; }
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-3%, 4%); }
+  80% { transform: translate(5%, 2%); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .grain { animation: none; } }
+
+/* ---- Timeline scroll-linked progress fill ---- */
+.timeline::after {
+  content: ""; position: absolute; left: 6px; top: 6px; width: 2px;
+  height: calc(100% - 12px); transform-origin: top; transform: scaleY(var(--tp, 0));
+  background: linear-gradient(var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px var(--accent); transition: transform .12s linear;
+}
+
+/* ---- Animated primary button gradient ---- */
+.btn-primary {
+  background: linear-gradient(115deg, var(--accent), var(--accent-2), var(--accent));
+  background-size: 220% 220%;
+  animation: btn-grad 6s ease infinite;
+}
+@keyframes btn-grad { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@media (prefers-reduced-motion: reduce) { .btn-primary { animation: none; } }
+
+/* ---- Code window mouse tilt (Skills IDE) ---- */
+.code-showcase { --px: 0; --py: 0; perspective: 1200px; }
+.code-window {
+  transform: rotateY(calc(var(--px) * 9deg)) rotateX(calc(var(--py) * -6deg));
+  transition: transform .18s ease;
+}
+
+/* ---- Cursor trail dots ---- */
+.cursor-trail {
+  position: fixed; top: 0; left: 0; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent-2); pointer-events: none; z-index: 399;
+  transform: translate(-50%, -50%); opacity: 0; will-change: transform, opacity;
+  mix-blend-mode: screen;
+}
+@media (hover: none), (pointer: coarse) { .cursor-trail { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cursor-trail { display: none; } }
+
+/* ---- Staggered skill-tag pop-in ---- */
+.js .skill-card .tags li {
+  opacity: 0; transform: translateY(7px) scale(.96);
+  transition: opacity .4s ease, transform .4s ease;
+}
+.js .skill-card.is-visible .tags li { opacity: 1; transform: none; }
+.skill-card.is-visible .tags li:nth-child(1) { transition-delay: .05s; }
+.skill-card.is-visible .tags li:nth-child(2) { transition-delay: .10s; }
+.skill-card.is-visible .tags li:nth-child(3) { transition-delay: .15s; }
+.skill-card.is-visible .tags li:nth-child(4) { transition-delay: .20s; }
+.skill-card.is-visible .tags li:nth-child(5) { transition-delay: .25s; }
+.skill-card.is-visible .tags li:nth-child(6) { transition-delay: .30s; }
+.skill-card.is-visible .tags li:nth-child(7) { transition-delay: .35s; }
+.skill-card.is-visible .tags li:nth-child(8) { transition-delay: .40s; }
+.skill-card.is-visible .tags li:nth-child(9) { transition-delay: .45s; }
+@media (prefers-reduced-motion: reduce) {
+  .js .skill-card .tags li { opacity: 1 !important; transform: none !important; }
+}
+
+/* ---- Section-title decode scramble ---- */
+.st-text { display: inline-block; }
+.st-text.scrambling { color: var(--accent); }
+
 /* Reduced-motion: neutralize decorative animation */
 @media (prefers-reduced-motion: reduce) {
   .hero::before { animation: none; }

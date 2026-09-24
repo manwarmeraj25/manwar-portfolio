@@ -408,6 +408,125 @@
     } else { playCode(); }
   }
 
+  /* ---------- Section-title decode scramble ---------- */
+  var titles = [].slice.call(document.querySelectorAll(".section-title"));
+  titles.forEach(function (t) {
+    var textNode = null;
+    for (var n = t.lastChild; n; n = n.previousSibling) {
+      if (n.nodeType === 3 && n.textContent.trim()) { textNode = n; break; }
+    }
+    if (!textNode) return;
+    var finalText = textNode.textContent.trim();
+    var span = document.createElement("span");
+    span.className = "st-text";
+    span.textContent = finalText;
+    t.replaceChild(span, textNode);
+    t.insertBefore(document.createTextNode(" "), span);
+    t._span = span; t._final = finalText;
+  });
+  function scrambleEl(span, finalText) {
+    if (reduceMotion) { span.textContent = finalText; return; }
+    var chars = "!_-/[]{}=+*^?#ABCDEF0123456789@%";
+    var frame = 0;
+    var ends = [];
+    for (var i = 0; i < finalText.length; i++) ends.push(i * 2 + Math.floor(Math.random() * 8) + 6);
+    span.classList.add("scrambling");
+    (function update() {
+      var out = "", done = 0;
+      for (var i = 0; i < finalText.length; i++) {
+        var c = finalText[i];
+        if (c === " ") { out += " "; done++; continue; }
+        if (frame >= ends[i]) { out += c; done++; }
+        else { out += chars[Math.floor(Math.random() * chars.length)]; }
+      }
+      span.textContent = out;
+      if (done === finalText.length) { span.textContent = finalText; span.classList.remove("scrambling"); return; }
+      frame++;
+      window.requestAnimationFrame(update);
+    })();
+  }
+  if ("IntersectionObserver" in window) {
+    var tio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting && e.target._span) { scrambleEl(e.target._span, e.target._final); tio.unobserve(e.target); }
+      });
+    }, { threshold: 0.5 });
+    titles.forEach(function (t) { if (t._span) tio.observe(t); });
+  }
+
+  /* ---------- Timeline scroll-linked progress ---------- */
+  var timeline = document.querySelector(".timeline");
+  if (timeline) {
+    var tRaf = false;
+    function updTimeline() {
+      if (tRaf) return; tRaf = true;
+      window.requestAnimationFrame(function () {
+        var r = timeline.getBoundingClientRect();
+        var ref = window.innerHeight * 0.55;
+        var p = (ref - r.top) / r.height;
+        p = Math.max(0, Math.min(1, p));
+        timeline.style.setProperty("--tp", p.toFixed(3));
+        tRaf = false;
+      });
+    }
+    window.addEventListener("scroll", updTimeline, { passive: true });
+    window.addEventListener("resize", updTimeline, { passive: true });
+    updTimeline();
+  }
+
+  /* ---------- Code window mouse tilt (Skills IDE) ---------- */
+  if (canFX) {
+    var showcase = document.querySelector(".code-showcase");
+    var cw = document.querySelector(".code-window");
+    if (showcase && cw) {
+      var cwRaf = false, cnx = 0, cny = 0;
+      showcase.addEventListener("pointermove", function (e) {
+        if (e.pointerType === "touch") return;
+        var r = cw.getBoundingClientRect();
+        cnx = (e.clientX - (r.left + r.width / 2)) / r.width;
+        cny = (e.clientY - (r.top + r.height / 2)) / r.height;
+        if (cwRaf) return; cwRaf = true;
+        window.requestAnimationFrame(function () {
+          showcase.style.setProperty("--px", cnx.toFixed(3));
+          showcase.style.setProperty("--py", cny.toFixed(3));
+          cwRaf = false;
+        });
+      }, { passive: true });
+      showcase.addEventListener("pointerleave", function () {
+        showcase.style.setProperty("--px", "0"); showcase.style.setProperty("--py", "0");
+      });
+    }
+  }
+
+  /* ---------- Cursor trail ---------- */
+  if (canFX) {
+    var TRAIL = 5, trails = [];
+    for (var ti = 0; ti < TRAIL; ti++) {
+      var d = document.createElement("div");
+      d.className = "cursor-trail";
+      document.body.appendChild(d);
+      trails.push({ el: d, x: 0, y: 0 });
+    }
+    var txp = 0, typ = 0, tStarted = false;
+    window.addEventListener("pointermove", function (e) {
+      if (e.pointerType === "touch") return;
+      txp = e.clientX; typ = e.clientY;
+      if (!tStarted) { tStarted = true; trails.forEach(function (t) { t.x = txp; t.y = typ; }); trailLoop(); }
+    }, { passive: true });
+    function trailLoop() {
+      var px = txp, py = typ;
+      for (var i = 0; i < trails.length; i++) {
+        var t = trails[i];
+        t.x += (px - t.x) * 0.35; t.y += (py - t.y) * 0.35;
+        var s = 1 - i / (TRAIL + 1);
+        t.el.style.transform = "translate(" + t.x.toFixed(1) + "px," + t.y.toFixed(1) + "px) translate(-50%,-50%) scale(" + s.toFixed(2) + ")";
+        t.el.style.opacity = (0.45 * s).toFixed(2);
+        px = t.x; py = t.y;
+      }
+      window.requestAnimationFrame(trailLoop);
+    }
+  }
+
   /* ---------- Button click ripple ---------- */
   var rippleBtns = [].slice.call(document.querySelectorAll(".btn"));
   rippleBtns.forEach(function (btn) {
