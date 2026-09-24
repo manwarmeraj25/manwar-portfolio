@@ -54,7 +54,7 @@
 /* ---------- Reset & base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -788,6 +788,36 @@ strong { color: var(--text); font-weight: 600; }
 /* ---- Section-title decode scramble ---- */
 .st-text { display: inline-block; }
 .st-text.scrambling { color: var(--accent); }
+
+/* ============================================================
+   MOBILE POLISH (small screens)
+   ============================================================ */
+@media (max-width: 600px) {
+  .section { padding: 2.8rem 0; }
+  .hero { padding-top: 2.75rem; }
+  .container { padding: 0 1.1rem; }
+
+  /* Buttons fill the row tidily instead of leaving a stray one */
+  .hero-actions { gap: .6rem; }
+  .hero-actions .btn { flex: 1 1 auto; justify-content: center; }
+
+  /* IDE goes full-width and readable instead of a tiny centered box */
+  .skills-layout { gap: 1.4rem; }
+  .code-showcase { justify-content: stretch; }
+  .code-window { width: 100%; }
+  .cw-body { padding: .9rem 1rem; }
+  .cw-body code { font-size: .74rem; line-height: 1.75; }
+  .cw-term { font-size: .72rem; }
+
+  /* Section titles a touch smaller so they never crowd */
+  .section-title { gap: .5rem; }
+}
+
+@media (max-width: 380px) {
+  .hero-name { font-size: 2.3rem; }
+  .hero-stats strong { font-size: 1.45rem; }
+  .code-window { border-radius: 10px; }
+}
 
 /* Reduced-motion: neutralize decorative animation */
 @media (prefers-reduced-motion: reduce) {
